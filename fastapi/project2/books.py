@@ -22,6 +22,16 @@ class BookRequest(BaseModel):
     description: str = Field(min_length=5, max_length=300)
     rating: int = Field(gt=0, lt=6)
 
+    class Config:
+        schema_extra = {
+            "example": {
+                "title": "A essência de tudo",
+                "author": "Enzo Pedro Bonacina",
+                "description": "O alicerce do raciocínio",
+                "rating": 5,
+            }
+        }
+
 
 BOOKS = [
     Book(1, "Computer Science Pro", "codingwithroby", "A very nice book", 5),
