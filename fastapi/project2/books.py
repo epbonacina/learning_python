@@ -48,17 +48,12 @@ async def read_all_bocks():
     return BOOKS
 
 
-@app.get("/books/id/{book_id}")
-async def get_book_by_id(book_id: int):
-    for book in BOOKS:
-        if book.id == book_id:
-            return book
-
-
-@app.get("/books/rating/{book_rating}")
-async def get_books_by_rating(book_rating: int):
-    selected_books = [b for b in BOOKS if b.rating == book_rating]
-    return selected_books
+@app.get("/books/")
+async def get_filtered_books(rating: int | None = None, book_id: int | None = None):
+    if book_id:
+        return _get_book_by_id(book_id)
+    elif rating:
+        return _get_books_by_rating(rating)
 
 
 @app.post("/books/create")
@@ -67,6 +62,26 @@ async def create_book(book_request: BookRequest):
     BOOKS.append(_with_id(new_book))
 
 
+@app.put("/books/")
+async def update_book(new_book: Book):
+    for i, book in enumerate(BOOKS):
+        if book.id == new_book.id:
+            BOOKS[i] = new_book
+
+
+def _get_book_by_id(book_id: int) -> Book | None:
+    for book in BOOKS:
+        if book.id == book_id:
+            return book
+
+
+def _get_books_by_rating(rating: int) -> list[Book]:
+    selected_books = [b for b in BOOKS if b.rating == rating]
+    return selected_books
+
+
 def _with_id(book: Book) -> Book:
     book.id = 1 if len(BOOKS) == 0 else BOOKS[-1].id + 1
     return book
+
+
