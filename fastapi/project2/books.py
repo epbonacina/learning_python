@@ -48,11 +48,17 @@ async def read_all_bocks():
     return BOOKS
 
 
-@app.get("/books/{book_id}")
+@app.get("/books/id/{book_id}")
 async def get_book_by_id(book_id: int):
     for book in BOOKS:
         if book.id == book_id:
             return book
+
+
+@app.get("/books/rating/{book_rating}")
+async def get_books_by_rating(book_rating: int):
+    selected_books = [b for b in BOOKS if b.rating == book_rating]
+    return selected_books
 
 
 @app.post("/books/create")
